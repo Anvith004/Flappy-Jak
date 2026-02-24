@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    background: skyblue;
+    display: flex;
+    justify-content: center;
+}
+
+canvas {
+    background: lightblue;
+}
