@@ -1,13 +1,13 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// ================= GLOBAL VARIABLES =================
+// ================= GLOBAL SETTINGS =================
 
 let gameState = "start";
 
 let pipeSpeed = 1.0;
-let gap = 250;              // vertical gap
-let pipeSpacing = 300;      // horizontal spacing
+let gap = 300;              // vertical gap
+let pipeSpacing = 380;      // horizontal spacing
 
 let pipes = [];
 let frame = 0;
@@ -16,6 +16,7 @@ let highScore = localStorage.getItem("flappyHighScore") || 0;
 
 let gameOverScale = 0;
 let bounceBack = false;
+let gameOverPlayed = false;
 
 let retryButton = {
   x: 0,
@@ -27,22 +28,28 @@ let retryButton = {
 // ================= LOAD IMAGES =================
 
 const birdImg = new Image();
-birdImg.src = "images/bird.jpeg";  // your bird image
+birdImg.src = "images/bird.jpeg";
 
 const gameOverImg = new Image();
-gameOverImg.src = "images/gameover.jpeg";  // your popup image
+gameOverImg.src = "images/gameover.jpeg";
+
+const pipeImg = new Image();
+pipeImg.src = "images/pipe.jpeg";   // change name if different
+
+// ================= LOAD SOUND =================
 
 const jumpSound = new Audio("sounds/jump.mp3");
+const gameOverSound = new Audio("sounds/gameover.mp3");
 
 // ================= BIRD =================
 
 let bird = {
   x: 80,
   y: 300,
-  width: 60,
-  height: 60,
-  gravity: 0.15,
-  lift: -6,
+  width: 70,
+  height: 70,
+  gravity: 0.18,
+  lift: -9.5,
   velocity: 0
 };
 
@@ -57,6 +64,7 @@ function resetGame() {
   pipeSpeed = 1.0;
   gameOverScale = 0;
   bounceBack = false;
+  gameOverPlayed = false;
 }
 
 // ================= DRAW BIRD =================
@@ -104,17 +112,28 @@ function createPipe() {
 
 function drawPipes() {
 
-  ctx.fillStyle = "green";
-
   pipes.forEach(pipe => {
 
-    ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
-    ctx.fillRect(
+    // Top Pipe (normal)
+    ctx.drawImage(
+      pipeImg,
       pipe.x,
-      canvas.height - pipe.bottom,
+      0,
+      pipe.width,
+      pipe.top
+    );
+
+    // Bottom Pipe (flipped)
+    ctx.save();
+    ctx.scale(1, -1);
+    ctx.drawImage(
+      pipeImg,
+      pipe.x,
+      -(canvas.height - pipe.bottom),
       pipe.width,
       pipe.bottom
     );
+    ctx.restore();
 
     pipe.x -= pipeSpeed;
 
@@ -162,7 +181,11 @@ function drawStartScreen() {
 // ================= GAME OVER SCREEN =================
 
 function drawGameOver() {
-
+if (!gameOverPlayed) {
+  gameOverSound.currentTime = 0;
+  gameOverSound.play();
+  gameOverPlayed = true;
+}
   if (score > highScore) {
     highScore = score;
     localStorage.setItem("flappyHighScore", highScore);
@@ -171,7 +194,7 @@ function drawGameOver() {
   ctx.fillStyle = "rgba(0,0,0,0.65)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Zoom + bounce
+  // Zoom + Bounce
   if (!bounceBack) {
     gameOverScale += 0.08;
     if (gameOverScale >= 1.1) bounceBack = true;
@@ -253,8 +276,8 @@ function gameLoop() {
       }
     }
 
-    // Increase difficulty (only speed)
-    if (frame % 280 === 0 && frame !== 0) {
+    // Difficulty increases only speed
+    if (frame % 300 === 0 && frame !== 0) {
       pipeSpeed += 0.1;
     }
 
@@ -279,13 +302,16 @@ function gameLoop() {
 // ================= INPUT =================
 
 function handleInput(event) {
-else if (gameState === "playing") {
-  bird.velocity = bird.lift;
 
-  jumpSound.currentTime = 0;  // reset sound
-  jumpSound.play();
-}
-  
+  if (gameState === "start") {
+    gameState = "playing";
+  }
+  else if (gameState === "playing") {
+
+    bird.velocity = bird.lift;
+
+    jumpSound.currentTime = 0;
+    jumpSound.play();
   }
   else if (gameState === "gameover") {
 
