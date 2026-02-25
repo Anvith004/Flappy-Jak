@@ -1,17 +1,8 @@
 body {
   margin: 0;
-  overflow: hidden;
-  background: skyblue;
+  background: #7ec0d9;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-
-canvas {
-  background: lightblue;
-  border: 4px solid black;
-  max-width: 95vw;
-  height: auto;
-}
-

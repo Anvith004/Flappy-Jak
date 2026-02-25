@@ -1,6 +1,24 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+function resizeCanvas() {
+  let screenWidth = window.innerWidth;
+  let screenHeight = window.innerHeight;
+
+  // Make it tall like mobile game
+  canvas.height = screenHeight;
+  canvas.width = screenHeight * 0.6;
+
+  // If width becomes bigger than screen, adjust
+  if (canvas.width > screenWidth) {
+    canvas.width = screenWidth;
+    canvas.height = screenWidth / 0.6;
+  }
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
 // ================= GLOBAL SETTINGS =================
 
 let gameState = "start";
