@@ -6,8 +6,8 @@ const ctx = canvas.getContext("2d");
 let gameState = "start";
 
 let pipeSpeed = 1.0;
-let gap = 300;              // vertical gap
-let pipeSpacing = 380;      // horizontal spacing
+let gap = 250;           // vertical gap
+let pipeSpacing = 300;     // horizontal spacing
 
 let pipes = [];
 let frame = 0;
@@ -46,10 +46,10 @@ const gameOverSound = new Audio("sounds/gameover.mp3");
 let bird = {
   x: 80,
   y: 300,
-  width: 70,
-  height: 70,
-  gravity: 0.18,
-  lift: -9.5,
+  width: 60,
+  height: 60,
+  gravity: 0.15,
+  lift: -6,
   velocity: 0
 };
 
@@ -114,7 +114,7 @@ function drawPipes() {
 
   pipes.forEach(pipe => {
 
-    // Top Pipe (normal)
+    // ===== TOP PIPE =====
     ctx.drawImage(
       pipeImg,
       pipe.x,
@@ -123,26 +123,24 @@ function drawPipes() {
       pipe.top
     );
 
-    // Bottom Pipe (flipped)
-    ctx.save();
-    ctx.scale(1, -1);
+    // ===== BOTTOM PIPE =====
     ctx.drawImage(
       pipeImg,
       pipe.x,
-      -(canvas.height - pipe.bottom),
+      canvas.height - pipe.bottom,
       pipe.width,
       pipe.bottom
     );
-    ctx.restore();
 
+    // Move pipe
     pipe.x -= pipeSpeed;
 
-    // Collision
+    // Collision detection
     if (
       bird.x < pipe.x + pipe.width &&
       bird.x + bird.width > pipe.x &&
       (bird.y < pipe.top ||
-        bird.y + bird.height > canvas.height - pipe.bottom)
+       bird.y + bird.height > canvas.height - pipe.bottom)
     ) {
       gameState = "gameover";
     }
@@ -277,7 +275,7 @@ function gameLoop() {
     }
 
     // Difficulty increases only speed
-    if (frame % 300 === 0 && frame !== 0) {
+    if (frame % 280==0 && frame !== 0) {
       pipeSpeed += 0.1;
     }
 
