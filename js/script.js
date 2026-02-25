@@ -23,7 +23,7 @@ window.addEventListener("resize", resizeCanvas);
 
 let gameState = "start";
 
-let pipeSpeed = 1.0;
+let pipeSpeed = 1.5;
 let gap = 250;           // vertical gap
 let pipeSpacing = 300;     // horizontal spacing
 
@@ -66,8 +66,8 @@ let bird = {
   y: 300,
   width: 60,
   height: 60,
-  gravity: 0.15,
-  lift: -6,
+  gravity: 0.18,
+  lift: -4,
   velocity: 0
 };
 
