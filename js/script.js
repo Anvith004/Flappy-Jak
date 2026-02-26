@@ -54,6 +54,9 @@ gameOverImg.src = "images/gameover.jpeg";
 const pipeImg = new Image();
 pipeImg.src = "images/pipe.jpeg";   // change name if different
 
+const bgImg = new Image();
+bgImg.src = "imges/background.jpeg";
+
 // ================= LOAD SOUND =================
 
 const jumpSound = new Audio("sounds/jump.mp3");
@@ -275,6 +278,8 @@ if (!gameOverPlayed) {
 function gameLoop() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
   if (gameState === "start") {
     drawStartScreen();
